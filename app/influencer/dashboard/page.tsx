@@ -194,176 +194,173 @@ export default function InfluencerDashboard() {
           ))}
         </div>
 
-        {/* Active Campaigns */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Active Campaigns</CardTitle>
-            <CardDescription>Manage your ongoing collaborations</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {campaigns.map((campaign) => (
-                <div key={campaign.id} className="p-4 border rounded-lg hover:shadow-sm transition-shadow">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-4">
-                      <img
-                        src={campaign.brandLogo || "/placeholder.svg"}
-                        alt={campaign.brand}
-                        className="w-12 h-12 rounded-full"
-                      />
-                      <div>
-                        <h3 className="font-semibold text-gray-900">{campaign.name}</h3>
-                        <p className="text-sm text-gray-600">by {campaign.brand}</p>
+        {/* Main Content */}
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Active Campaigns */}
+          <div className="lg:col-span-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Active Campaigns</CardTitle>
+                <CardDescription>Manage your ongoing collaborations</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {campaigns.map((campaign) => (
+                    <div key={campaign.id} className="p-4 border rounded-lg hover:shadow-sm transition-shadow">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center space-x-4">
+                          <img
+                            src={campaign.brandLogo || "/placeholder.svg"}
+                            alt={campaign.brand}
+                            className="w-12 h-12 rounded-full"
+                          />
+                          <div>
+                            <h3 className="font-semibold text-gray-900">{campaign.name}</h3>
+                            <p className="text-sm text-gray-600">by {campaign.brand}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge className={campaign.statusColor}>{campaign.status}</Badge>
+                          <div className="flex items-center gap-1">
+                            <Bot className="w-3 h-3 text-blue-600" />
+                            <span className="text-xs text-gray-600">AI Managed</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                        <div>
+                          <p className="text-sm text-gray-600">Payment</p>
+                          <p className="font-medium text-green-600">{campaign.payment}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600">Deadline</p>
+                          <p className="font-medium">{campaign.deadline}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600">Deliverables</p>
+                          <p className="font-medium">{campaign.deliverables}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600">Progress</p>
+                          <p className="font-medium">{campaign.progress}%</p>
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <div className="flex justify-between text-sm mb-1">
+                          <span>Progress</span>
+                          <span>{campaign.progress}%</span>
+                        </div>
+                        <Progress value={campaign.progress} className="h-2" />
+                      </div>
+
+                      <div className="flex gap-2">
+                        <Link href={`/influencer/my-campaigns/${campaign.id}`}>
+                          <Button variant="outline" size="sm">
+                            View Details
+                          </Button>
+                        </Link>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleMessageBrand(campaign)}
+                          className="flex items-center gap-2"
+                        >
+                          <MessageSquare className="w-4 h-4" />
+                          Message Brand
+                        </Button>
+                        {campaign.status === "Active" && <Button size="sm">Upload Content</Button>}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Badge className={campaign.statusColor}>{campaign.status}</Badge>
-                      <div className="flex items-center gap-1">
-                        <Bot className="w-3 h-3 text-blue-600" />
-                        <span className="text-xs text-gray-600">AI Managed</span>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-6">
+            {/* Performance Overview */}
+            <Card>
+              <CardHeader>
+                <CardTitle>This Month's Performance</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Campaigns Completed</span>
+                    <span className="font-medium">3</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Average Rating</span>
+                    <div className="flex items-center gap-1">
+                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                      <span className="font-medium">4.8</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">On-time Delivery</span>
+                    <span className="font-medium text-green-600">100%</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">AI Negotiations</span>
+                    <span className="font-medium text-blue-600">5 successful</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Recent Activity */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Activity</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {recentActivities.map((activity) => (
+                    <div key={activity.id} className="flex items-start space-x-4">
+                      <div className={`w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center`}>
+                        <activity.icon className={`w-4 h-4 ${activity.color}`} />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900">{activity.title}</p>
+                        <p className="text-sm text-gray-600">{activity.description}</p>
+                        <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
                       </div>
                     </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                    <div>
-                      <p className="text-sm text-gray-600">Payment</p>
-                      <p className="font-medium text-green-600">{campaign.payment}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Deadline</p>
-                      <p className="font-medium">{campaign.deadline}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Deliverables</p>
-                      <p className="font-medium">{campaign.deliverables}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Progress</p>
-                      <p className="font-medium">{campaign.progress}%</p>
-                    </div>
-                  </div>
-
-                  <div className="mb-4">
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>Progress</span>
-                      <span>{campaign.progress}%</span>
-                    </div>
-                    <Progress value={campaign.progress} className="h-2" />
-                  </div>
-
-                  {/* AI Negotiator Info */}
-                  <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <Bot className="w-4 h-4 text-blue-600" />
-                      <span className="text-sm font-medium text-blue-800">Managed by {campaign.aiNegotiator.name}</span>
-                    </div>
-                    <p className="text-xs text-blue-600 mt-1">{campaign.aiNegotiator.personality}</p>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <Link href={`/influencer/my-campaigns/${campaign.id}`}>
-                      <Button variant="outline" size="sm">
-                        View Details
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleMessageBrand(campaign)}
-                      className="flex items-center gap-2"
-                    >
-                      <MessageSquare className="w-4 h-4" />
-                      Message Brand
-                    </Button>
-                    {campaign.status === "Active" && <Button size="sm">Upload Content</Button>}
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
 
-        {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>Your latest campaign updates</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentActivities.map((activity) => (
-                <div key={activity.id} className="flex items-start space-x-4">
-                  <div className={`w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center`}>
-                    <activity.icon className={`w-4 h-4 ${activity.color}`} />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900">{activity.title}</p>
-                    <p className="text-sm text-gray-600">{activity.description}</p>
-                    <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
-                  </div>
+            {/* Quick Actions */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <Button className="w-full justify-start" variant="outline">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    View Content Calendar
+                  </Button>
+                  <Button className="w-full justify-start" variant="outline">
+                    <TrendingUp className="w-4 h-4 mr-2" />
+                    Analytics Dashboard
+                  </Button>
+                  <Button className="w-full justify-start" variant="outline">
+                    <MessageSquare className="w-4 h-4 mr-2" />
+                    Message Center
+                  </Button>
+                  <Button className="w-full justify-start" variant="outline">
+                    <Zap className="w-4 h-4 mr-2" />
+                    AI Writing Assistant
+                  </Button>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Performance Overview */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>This Month's Performance</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Campaigns Completed</span>
-                  <span className="font-medium">3</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Average Rating</span>
-                  <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                    <span className="font-medium">4.8</span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">On-time Delivery</span>
-                  <span className="font-medium text-green-600">100%</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">AI Negotiations</span>
-                  <span className="font-medium text-blue-600">5 successful</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <Button className="w-full justify-start" variant="outline">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  View Content Calendar
-                </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <TrendingUp className="w-4 h-4 mr-2" />
-                  Analytics Dashboard
-                </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <MessageSquare className="w-4 h-4 mr-2" />
-                  Message Center
-                </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <Zap className="w-4 h-4 mr-2" />
-                  AI Writing Assistant
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
 

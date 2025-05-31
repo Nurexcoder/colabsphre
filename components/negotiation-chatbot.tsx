@@ -4,8 +4,21 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Bot, Send, X, Sparkles, DollarSign, Calendar, Zap, MessageSquare, ChevronDown, ChevronUp } from "lucide-react"
+import {
+  Bot,
+  Send,
+  X,
+  Sparkles,
+  DollarSign,
+  Calendar,
+  Zap,
+  MessageSquare,
+  ChevronDown,
+  ChevronUp,
+  Info,
+} from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface NegotiationChatbotProps {
   isOpen: boolean
@@ -204,223 +217,241 @@ export function NegotiationChatbot({ isOpen, onClose, campaign }: NegotiationCha
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-end p-4">
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/20" onClick={onClose} />
+    <TooltipProvider>
+      <div className="fixed inset-0 z-50 flex items-end justify-end p-4">
+        {/* Backdrop */}
+        <div className="absolute inset-0 bg-black/20" onClick={onClose} />
 
-      {/* Chatbot */}
-      <Card className="relative w-96 h-[600px] bg-white shadow-2xl flex flex-col">
-        {/* Header */}
-        <CardHeader className="pb-3 border-b">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Avatar className="w-8 h-8">
-                <AvatarImage src={campaign.brandLogo || "/placeholder.svg"} alt={campaign.brand} />
-                <AvatarFallback>{campaign.brand.charAt(0)}</AvatarFallback>
+        {/* Chatbot */}
+        <Card className="relative w-96 h-[600px] bg-white shadow-2xl flex flex-col">
+          {/* Header */}
+          <CardHeader className="pb-3 border-b">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Avatar className="w-8 h-8">
+                  <AvatarImage src={campaign.brandLogo || "/placeholder.svg"} alt={campaign.brand} />
+                  <AvatarFallback>{campaign.brand.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <CardTitle className="text-sm">{campaign.name}</CardTitle>
+                  <p className="text-xs text-gray-600">with {campaign.brand}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                      <Info className="w-3 h-3 text-gray-500" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="left" className="max-w-xs">
+                    <p className="text-xs">
+                      {activeAI === "brand"
+                        ? "Negotiating with brand AI • Press Enter to send"
+                        : "Getting writing assistance • Press Enter to send"}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+                <Button variant="ghost" size="sm" onClick={onClose}>
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="flex gap-2 mt-3">
+              <Button
+                variant={activeAI === "brand" ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setActiveAI("brand")
+                  setShowQuickResponses(true)
+                }}
+                className="flex-1"
+              >
+                <Bot className="w-3 h-3 mr-1" />
+                Brand AI
+              </Button>
+              <Button
+                variant={activeAI === "influencer" ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setActiveAI("influencer")
+                  setShowQuickResponses(true)
+                }}
+                className="flex-1"
+              >
+                <Sparkles className="w-3 h-3 mr-1" />
+                Writing AI
+              </Button>
+            </div>
+          </CardHeader>
+
+          {/* AI Info */}
+          <div className="p-3 bg-gradient-to-r from-gray-50 to-blue-50 border-b">
+            <div className="flex items-center gap-2">
+              <Avatar className="w-6 h-6">
+                <div
+                  className={`w-6 h-6 bg-gradient-to-br ${
+                    activeAI === "brand" ? brandAI.color : influencerAI.color
+                  } rounded-full flex items-center justify-center`}
+                >
+                  {activeAI === "brand" ? (
+                    <Bot className="w-3 h-3 text-white" />
+                  ) : (
+                    <Sparkles className="w-3 h-3 text-white" />
+                  )}
+                </div>
               </Avatar>
               <div>
-                <CardTitle className="text-sm">{campaign.name}</CardTitle>
-                <p className="text-xs text-gray-600">with {campaign.brand}</p>
+                <p className="text-sm font-medium">{activeAI === "brand" ? brandAI.name : influencerAI.name}</p>
+                <p className="text-xs text-gray-600">{activeAI === "brand" ? brandAI.role : influencerAI.role}</p>
               </div>
             </div>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="w-4 h-4" />
-            </Button>
           </div>
 
-          <div className="flex gap-2 mt-3">
-            <Button
-              variant={activeAI === "brand" ? "default" : "outline"}
-              size="sm"
-              onClick={() => {
-                setActiveAI("brand")
-                setShowQuickResponses(true)
-              }}
-              className="flex-1"
-            >
-              <Bot className="w-3 h-3 mr-1" />
-              Brand AI
-            </Button>
-            <Button
-              variant={activeAI === "influencer" ? "default" : "outline"}
-              size="sm"
-              onClick={() => {
-                setActiveAI("influencer")
-                setShowQuickResponses(true)
-              }}
-              className="flex-1"
-            >
-              <Sparkles className="w-3 h-3 mr-1" />
-              Writing AI
-            </Button>
-          </div>
-        </CardHeader>
-
-        {/* AI Info */}
-        <div className="p-3 bg-gradient-to-r from-gray-50 to-blue-50 border-b">
-          <div className="flex items-center gap-2">
-            <Avatar className="w-6 h-6">
-              <div
-                className={`w-6 h-6 bg-gradient-to-br ${
-                  activeAI === "brand" ? brandAI.color : influencerAI.color
-                } rounded-full flex items-center justify-center`}
-              >
-                {activeAI === "brand" ? (
-                  <Bot className="w-3 h-3 text-white" />
-                ) : (
-                  <Sparkles className="w-3 h-3 text-white" />
-                )}
-              </div>
-            </Avatar>
-            <div>
-              <p className="text-sm font-medium">{activeAI === "brand" ? brandAI.name : influencerAI.name}</p>
-              <p className="text-xs text-gray-600">{activeAI === "brand" ? brandAI.role : influencerAI.role}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Messages */}
-        <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
-          {conversation
-            .filter((msg) => activeAI === "brand" || msg.aiType !== "brand")
-            .map((msg) => (
-              <div key={msg.id} className={`flex ${msg.isAI ? "justify-start" : "justify-end"}`}>
-                <div className={`flex space-x-2 max-w-xs ${msg.isAI ? "" : "flex-row-reverse space-x-reverse"}`}>
-                  <Avatar className="w-6 h-6">
-                    {msg.isAI ? (
+          {/* Messages */}
+          <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
+            {conversation
+              .filter((msg) => activeAI === "brand" || msg.aiType !== "brand")
+              .map((msg) => (
+                <div key={msg.id} className={`flex ${msg.isAI ? "justify-start" : "justify-end"}`}>
+                  <div className={`flex space-x-2 max-w-xs ${msg.isAI ? "" : "flex-row-reverse space-x-reverse"}`}>
+                    <Avatar className="w-6 h-6">
+                      {msg.isAI ? (
+                        <div
+                          className={`w-6 h-6 bg-gradient-to-br ${
+                            msg.aiType === "brand" ? brandAI.color : influencerAI.color
+                          } rounded-full flex items-center justify-center`}
+                        >
+                          {msg.aiType === "brand" ? (
+                            <Bot className="w-3 h-3 text-white" />
+                          ) : (
+                            <Sparkles className="w-3 h-3 text-white" />
+                          )}
+                        </div>
+                      ) : (
+                        <AvatarImage src="/placeholder.svg" alt="You" />
+                      )}
+                    </Avatar>
+                    <div>
                       <div
-                        className={`w-6 h-6 bg-gradient-to-br ${
-                          msg.aiType === "brand" ? brandAI.color : influencerAI.color
-                        } rounded-full flex items-center justify-center`}
+                        className={`px-3 py-2 rounded-lg text-sm ${
+                          msg.isAI ? "bg-gray-100 text-gray-900" : "bg-blue-500 text-white"
+                        }`}
                       >
-                        {msg.aiType === "brand" ? (
-                          <Bot className="w-3 h-3 text-white" />
-                        ) : (
-                          <Sparkles className="w-3 h-3 text-white" />
-                        )}
+                        <div className="flex items-start gap-2">
+                          {msg.isAI && getMessageTypeIcon(msg.type)}
+                          <p className="whitespace-pre-line">{msg.message}</p>
+                        </div>
                       </div>
-                    ) : (
-                      <AvatarImage src="/placeholder.svg" alt="You" />
-                    )}
-                  </Avatar>
-                  <div>
-                    <div
-                      className={`px-3 py-2 rounded-lg text-sm ${
-                        msg.isAI ? "bg-gray-100 text-gray-900" : "bg-blue-500 text-white"
-                      }`}
-                    >
-                      <div className="flex items-start gap-2">
-                        {msg.isAI && getMessageTypeIcon(msg.type)}
-                        <p className="whitespace-pre-line">{msg.message}</p>
-                      </div>
+                      <p className="text-xs text-gray-500 mt-1">{msg.timestamp}</p>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">{msg.timestamp}</p>
+                  </div>
+                </div>
+              ))}
+
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className="flex space-x-2 max-w-xs">
+                  <Avatar className="w-6 h-6">
+                    <div
+                      className={`w-6 h-6 bg-gradient-to-br ${
+                        activeAI === "brand" ? brandAI.color : influencerAI.color
+                      } rounded-full flex items-center justify-center`}
+                    >
+                      {activeAI === "brand" ? (
+                        <Bot className="w-3 h-3 text-white" />
+                      ) : (
+                        <Sparkles className="w-3 h-3 text-white" />
+                      )}
+                    </div>
+                  </Avatar>
+                  <div className="px-3 py-2 rounded-lg bg-gray-100">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                      <div
+                        className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                        style={{ animationDelay: "0.1s" }}
+                      />
+                      <div
+                        className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                        style={{ animationDelay: "0.2s" }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            ))}
+            )}
+          </CardContent>
 
-          {isTyping && (
-            <div className="flex justify-start">
-              <div className="flex space-x-2 max-w-xs">
-                <Avatar className="w-6 h-6">
-                  <div
-                    className={`w-6 h-6 bg-gradient-to-br ${
-                      activeAI === "brand" ? brandAI.color : influencerAI.color
-                    } rounded-full flex items-center justify-center`}
+          {/* Quick Responses */}
+          {showQuickResponses && (
+            <div className="border-t bg-gray-50">
+              <div className="p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs text-gray-600 font-medium">
+                    {activeAI === "brand" ? "Quick responses:" : "AI suggestions:"}
+                  </p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowQuickResponses(false)}
+                    className="h-5 w-5 p-0"
                   >
-                    {activeAI === "brand" ? (
-                      <Bot className="w-3 h-3 text-white" />
-                    ) : (
-                      <Sparkles className="w-3 h-3 text-white" />
-                    )}
-                  </div>
-                </Avatar>
-                <div className="px-3 py-2 rounded-lg bg-gray-100">
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-                    <div
-                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                      style={{ animationDelay: "0.1s" }}
-                    />
-                    <div
-                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                      style={{ animationDelay: "0.2s" }}
-                    />
-                  </div>
+                    <ChevronUp className="w-3 h-3" />
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 gap-1">
+                  {quickResponses[activeAI].map((response, index) => (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      size="sm"
+                      className="text-xs h-8 justify-start text-left"
+                      onClick={() => handleQuickResponse(response)}
+                    >
+                      {response}
+                    </Button>
+                  ))}
                 </div>
               </div>
             </div>
           )}
-        </CardContent>
 
-        {/* Quick Responses */}
-        {showQuickResponses && (
-          <div className="border-t bg-gray-50">
-            <div className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs text-gray-600 font-medium">
-                  {activeAI === "brand" ? "Quick responses:" : "AI suggestions:"}
-                </p>
-                <Button variant="ghost" size="sm" onClick={() => setShowQuickResponses(false)} className="h-5 w-5 p-0">
-                  <ChevronUp className="w-3 h-3" />
-                </Button>
-              </div>
-              <div className="grid grid-cols-1 gap-1">
-                {quickResponses[activeAI].map((response, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    size="sm"
-                    className="text-xs h-8 justify-start text-left"
-                    onClick={() => handleQuickResponse(response)}
-                  >
-                    {response}
-                  </Button>
-                ))}
-              </div>
+          {!showQuickResponses && (
+            <div className="border-t bg-gray-50 p-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowQuickResponses(true)}
+                className="w-full h-8 text-xs"
+              >
+                <ChevronDown className="w-3 h-3 mr-1" />
+                Show {activeAI === "brand" ? "Quick Responses" : "AI Suggestions"}
+              </Button>
+            </div>
+          )}
+
+          {/* Message Input */}
+          <div className="p-3 border-t">
+            <div className="flex items-end space-x-2">
+              <Textarea
+                placeholder={
+                  activeAI === "brand" ? `Message ${brandAI.name}...` : "Type your message for AI assistance..."
+                }
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), handleSendMessage())}
+                className="flex-1 min-h-[40px] max-h-[100px] resize-none"
+                rows={1}
+              />
+              <Button onClick={handleSendMessage} disabled={!message.trim()} size="sm">
+                <Send className="w-4 h-4" />
+              </Button>
             </div>
           </div>
-        )}
-
-        {!showQuickResponses && (
-          <div className="border-t bg-gray-50 p-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowQuickResponses(true)}
-              className="w-full h-8 text-xs"
-            >
-              <ChevronDown className="w-3 h-3 mr-1" />
-              Show {activeAI === "brand" ? "Quick Responses" : "AI Suggestions"}
-            </Button>
-          </div>
-        )}
-
-        {/* Message Input */}
-        <div className="p-3 border-t">
-          <div className="flex items-end space-x-2">
-            <Textarea
-              placeholder={
-                activeAI === "brand" ? `Message ${brandAI.name}...` : "Type your message for AI assistance..."
-              }
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), handleSendMessage())}
-              className="flex-1 min-h-[40px] max-h-[100px] resize-none"
-              rows={1}
-            />
-            <Button onClick={handleSendMessage} disabled={!message.trim()} size="sm">
-              <Send className="w-4 h-4" />
-            </Button>
-          </div>
-          <p className="text-xs text-gray-500 mt-1">
-            {activeAI === "brand"
-              ? "Negotiating with brand AI • Press Enter to send"
-              : "Getting writing assistance • Press Enter to send"}
-          </p>
-        </div>
-      </Card>
-    </div>
+        </Card>
+      </div>
+    </TooltipProvider>
   )
 }

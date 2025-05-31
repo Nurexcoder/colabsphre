@@ -18,13 +18,11 @@ import {
   MessageSquare,
   Upload,
   Download,
-  Bot,
   Send,
   Paperclip,
   CheckCircle,
   Clock,
   AlertTriangle,
-  Zap,
   Star,
 } from "lucide-react"
 import Link from "next/link"
@@ -34,10 +32,10 @@ import { useParams } from "next/navigation"
 export default function CampaignDetailsPage() {
   const params = useParams()
   const campaignId = params.id as string
-  const [aiMessage, setAiMessage] = useState("")
+  const [message, setMessage] = useState("")
   const [contractFile, setContractFile] = useState<File | null>(null)
 
-  // Mock campaign data with AI negotiator
+  // Mock campaign data
   const campaign = {
     id: campaignId,
     name: "Summer Fashion Collection",
@@ -57,16 +55,6 @@ export default function CampaignDetailsPage() {
       "Focus on natural lighting, authentic poses, and summer vibes. Use provided hashtags and tag our brand.",
     nextDeliverable: "Instagram Reel due Jun 10",
     daysLeft: 3,
-    aiNegotiator: {
-      name: "StyleFlow AI",
-      avatar: "/placeholder.svg?height=60&width=60",
-      personality: "Professional & Persuasive",
-      brandName: "StyleCorp",
-      status: "Active",
-      lastActive: "1 hour ago",
-      negotiationSavings: "$200",
-      isNegotiating: false,
-    },
   }
 
   const deliverables = [
@@ -104,44 +92,41 @@ export default function CampaignDetailsPage() {
     },
   ]
 
-  const aiConversation = [
+  const conversation = [
     {
       id: "1",
-      sender: "StyleFlow AI",
-      message: `Hi! I'm StyleFlow AI, representing StyleCorp for this Summer Fashion Collection campaign. I've successfully negotiated your rate from $1,400 to $1,200 while maintaining all original deliverables. The brand is excited to work with you!`,
+      sender: "StyleCorp",
+      message: `Hi! We're excited to work with you on this Summer Fashion Collection campaign. Looking forward to your creative content!`,
       timestamp: "2 days ago",
-      isAI: true,
-      type: "negotiation_complete",
+      isBrand: true,
     },
     {
       id: "2",
       sender: "You",
       message: "Thank you! I'm excited about this collaboration. When do you need the first deliverable?",
       timestamp: "2 days ago",
-      isAI: false,
+      isBrand: false,
     },
     {
       id: "3",
-      sender: "StyleFlow AI",
-      message: `Perfect! Your first Instagram post is due May 25th. I've analyzed your previous content and noticed your beach photos perform 40% better than studio shots. For this summer collection, I'd recommend outdoor settings with natural lighting. Would you like me to send you the brand's style guide and product details?`,
+      sender: "StyleCorp",
+      message: `Your first Instagram post is due May 25th. For this summer collection, we'd recommend outdoor settings with natural lighting. Would you like us to send you the brand's style guide and product details?`,
       timestamp: "2 days ago",
-      isAI: true,
-      type: "content_guidance",
+      isBrand: true,
     },
     {
       id: "4",
       sender: "You",
       message: "Yes, please send the style guide. Also, can we discuss the timeline for the Instagram Reel?",
       timestamp: "1 day ago",
-      isAI: false,
+      isBrand: false,
     },
     {
       id: "5",
-      sender: "StyleFlow AI",
-      message: `I've sent the style guide to your email. Regarding the Instagram Reel, the original deadline is June 10th, but I can negotiate a 3-day extension if needed. Your engagement rates are consistently high (5.2% avg), so the brand is flexible. The reel should showcase 3-4 outfit transitions with trending audio. Would you like me to suggest some trending sounds that align with the brand's aesthetic?`,
+      sender: "StyleCorp",
+      message: `I've sent the style guide to your email. Regarding the Instagram Reel, the original deadline is June 10th, but we can offer a 3-day extension if needed. The reel should showcase 3-4 outfit transitions with trending audio. Would you like us to suggest some trending sounds that align with the brand's aesthetic?`,
       timestamp: "1 day ago",
-      isAI: true,
-      type: "timeline_flexibility",
+      isBrand: true,
     },
     {
       id: "6",
@@ -149,22 +134,21 @@ export default function CampaignDetailsPage() {
       message:
         "That would be great! Also, I'm thinking of adding a bonus story series. Can you check if the brand would be interested?",
       timestamp: "1 hour ago",
-      isAI: false,
+      isBrand: false,
     },
     {
       id: "7",
-      sender: "StyleFlow AI",
-      message: `Excellent initiative! I've reached out to the brand about your bonus story series idea. Based on their campaign goals and your engagement metrics, I'm confident they'll be interested. I'll negotiate additional compensation for the extra content. Your proactive approach really strengthens our negotiating position. I'll update you within 2 hours with their response and a proposed rate for the bonus content.`,
+      sender: "StyleCorp",
+      message: `We'd definitely be interested in your bonus story series idea! We can offer additional compensation for the extra content. Let's discuss the details and proposed rate for the bonus content.`,
       timestamp: "45 minutes ago",
-      isAI: true,
-      type: "bonus_negotiation",
+      isBrand: true,
     },
   ]
 
-  const handleAIMessage = () => {
-    if (aiMessage.trim()) {
-      // Handle AI message
-      setAiMessage("")
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      // Handle sending message
+      setMessage("")
     }
   }
 
@@ -172,21 +156,6 @@ export default function CampaignDetailsPage() {
     const file = event.target.files?.[0]
     if (file) {
       setContractFile(file)
-    }
-  }
-
-  const getMessageTypeIcon = (type?: string) => {
-    switch (type) {
-      case "negotiation_complete":
-        return <DollarSign className="w-3 h-3 text-green-600" />
-      case "content_guidance":
-        return <Star className="w-3 h-3 text-blue-600" />
-      case "timeline_flexibility":
-        return <Clock className="w-3 h-3 text-orange-600" />
-      case "bonus_negotiation":
-        return <Zap className="w-3 h-3 text-purple-600" />
-      default:
-        return null
     }
   }
 
@@ -231,7 +200,7 @@ export default function CampaignDetailsPage() {
           </div>
         </div>
 
-        {/* Campaign Overview with AI Negotiator Info */}
+        {/* Campaign Overview */}
         <div className="grid md:grid-cols-4 gap-6">
           <Card>
             <CardContent className="p-6 text-center">
@@ -271,46 +240,6 @@ export default function CampaignDetailsPage() {
           </Card>
         </div>
 
-        {/* AI Negotiator Card */}
-        <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-purple-50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Bot className="w-5 h-5 text-blue-600" />
-              Brand AI Negotiator
-            </CardTitle>
-            <CardDescription>This campaign is managed by {campaign.brand}'s AI negotiator</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Avatar className="w-12 h-12">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                    <Bot className="w-6 h-6 text-white" />
-                  </div>
-                </Avatar>
-                <div>
-                  <h3 className="font-semibold text-lg">{campaign.aiNegotiator.name}</h3>
-                  <p className="text-sm text-gray-600">{campaign.aiNegotiator.personality}</p>
-                  <p className="text-xs text-gray-500">
-                    Representing {campaign.aiNegotiator.brandName} • Last active: {campaign.aiNegotiator.lastActive}
-                  </p>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="flex items-center gap-1 mb-1">
-                  <DollarSign className="w-4 h-4 text-green-600" />
-                  <span className="text-sm font-medium text-green-600">
-                    Negotiated: {campaign.aiNegotiator.negotiationSavings} savings for you
-                  </span>
-                </div>
-                <Badge variant="outline" className="bg-green-100 text-green-700">
-                  {campaign.aiNegotiator.status}
-                </Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Progress */}
         <Card>
           <CardContent className="p-6">
@@ -333,7 +262,7 @@ export default function CampaignDetailsPage() {
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="deliverables">Deliverables</TabsTrigger>
-            <TabsTrigger value="ai-chat">AI Negotiator</TabsTrigger>
+            <TabsTrigger value="messages">Messages</TabsTrigger>
             <TabsTrigger value="contracts">Contracts</TabsTrigger>
           </TabsList>
 
@@ -429,10 +358,12 @@ export default function CampaignDetailsPage() {
 
                       {deliverable.status === "Pending" && (
                         <div className="mt-3">
-                          <Button size="sm">
-                            <Upload className="w-4 h-4 mr-2" />
-                            Upload Content
-                          </Button>
+                          <Link href={`/influencer/deliverables?campaign=${campaignId}&deliverable=${deliverable.id}`}>
+                            <Button size="sm">
+                              <Upload className="w-4 h-4 mr-2" />
+                              Upload Content
+                            </Button>
+                          </Link>
                         </div>
                       )}
                     </div>
@@ -442,47 +373,41 @@ export default function CampaignDetailsPage() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="ai-chat">
+          <TabsContent value="messages">
             <Card className="h-[600px] flex flex-col">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Bot className="w-5 h-5 text-blue-600" />
-                  Chat with {campaign.aiNegotiator.name}
+                  <MessageSquare className="w-5 h-5 text-blue-600" />
+                  Chat with {campaign.brand}
                 </CardTitle>
-                <CardDescription>
-                  Communicate directly with {campaign.brand}'s AI negotiator for this campaign
-                </CardDescription>
+                <CardDescription>Communicate directly with {campaign.brand} for this campaign</CardDescription>
               </CardHeader>
 
               <CardContent className="flex-1 flex flex-col">
                 {/* Chat Messages */}
                 <div className="flex-1 overflow-y-auto space-y-4 mb-4">
-                  {aiConversation.map((message) => (
-                    <div key={message.id} className={`flex ${message.isAI ? "justify-start" : "justify-end"}`}>
+                  {conversation.map((msg) => (
+                    <div key={msg.id} className={`flex ${msg.isBrand ? "justify-start" : "justify-end"}`}>
                       <div
-                        className={`flex space-x-2 max-w-xs lg:max-w-md ${message.isAI ? "" : "flex-row-reverse space-x-reverse"}`}
+                        className={`flex space-x-2 max-w-xs lg:max-w-md ${msg.isBrand ? "" : "flex-row-reverse space-x-reverse"}`}
                       >
                         <Avatar className="w-8 h-8">
-                          {message.isAI ? (
-                            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                              <Bot className="w-4 h-4 text-white" />
-                            </div>
+                          {msg.isBrand ? (
+                            <AvatarImage src={campaign.brandLogo || "/placeholder.svg"} alt={campaign.brand} />
                           ) : (
                             <AvatarImage src="/placeholder.svg" alt="You" />
                           )}
+                          <AvatarFallback>{msg.isBrand ? campaign.brand.charAt(0) : "Y"}</AvatarFallback>
                         </Avatar>
                         <div>
                           <div
                             className={`px-4 py-2 rounded-lg ${
-                              message.isAI ? "bg-gray-100 text-gray-900" : "bg-blue-500 text-white"
+                              msg.isBrand ? "bg-gray-100 text-gray-900" : "bg-blue-500 text-white"
                             }`}
                           >
-                            <div className="flex items-center gap-2 mb-1">
-                              {message.isAI && getMessageTypeIcon(message.type)}
-                              <p className="text-sm whitespace-pre-line">{message.message}</p>
-                            </div>
+                            <p className="text-sm whitespace-pre-line">{msg.message}</p>
                           </div>
-                          <p className="text-xs text-gray-500 mt-1">{message.timestamp}</p>
+                          <p className="text-xs text-gray-500 mt-1">{msg.timestamp}</p>
                         </div>
                       </div>
                     </div>
@@ -495,23 +420,15 @@ export default function CampaignDetailsPage() {
                     <Paperclip className="w-4 h-4" />
                   </Button>
                   <Input
-                    placeholder={`Message ${campaign.aiNegotiator.name} about this campaign...`}
-                    value={aiMessage}
-                    onChange={(e) => setAiMessage(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && handleAIMessage()}
+                    placeholder={`Message ${campaign.brand} about this campaign...`}
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                     className="flex-1"
                   />
-                  <Button onClick={handleAIMessage} disabled={!aiMessage.trim()}>
+                  <Button onClick={handleSendMessage} disabled={!message.trim()}>
                     <Send className="w-4 h-4" />
                   </Button>
-                </div>
-
-                {/* AI Status */}
-                <div className="mt-2 p-2 bg-blue-50 rounded text-center">
-                  <p className="text-xs text-blue-600">
-                    💡 {campaign.aiNegotiator.name} typically responds within 5 minutes and can help with content
-                    guidance, timeline adjustments, and additional opportunities
-                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -528,11 +445,10 @@ export default function CampaignDetailsPage() {
                 <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <CheckCircle className="w-5 h-5 text-green-600" />
-                    <span className="font-medium text-green-800">Contract Negotiated & Signed</span>
+                    <span className="font-medium text-green-800">Contract Signed</span>
                   </div>
                   <p className="text-sm text-green-700">
-                    {campaign.aiNegotiator.name} successfully negotiated your contract. Final rate: {campaign.payment}{" "}
-                    (saved you {campaign.aiNegotiator.negotiationSavings} from original quote)
+                    Your contract has been signed and approved. Final rate: {campaign.payment}
                   </p>
                 </div>
 
@@ -562,9 +478,7 @@ export default function CampaignDetailsPage() {
                     <div className="flex items-center justify-between p-3 border rounded-lg">
                       <div>
                         <p className="font-medium">Campaign Agreement v2.1</p>
-                        <p className="text-sm text-gray-600">
-                          Negotiated by {campaign.aiNegotiator.name} • Uploaded on May 20, 2025
-                        </p>
+                        <p className="text-sm text-gray-600">Uploaded on May 20, 2025</p>
                       </div>
                       <div className="flex space-x-2">
                         <Button variant="outline" size="sm">

@@ -8,6 +8,7 @@ import { TrendingUp, TrendingDown, Users, Eye, Heart, Download, Calendar, Filter
 import { BrandLayout } from "@/components/brand-layout"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 export default function AnalyticsPage() {
   const overviewStats = [
@@ -43,6 +44,7 @@ export default function AnalyticsPage() {
 
   const campaignPerformance = [
     {
+      id: "1",
       name: "Summer Fashion Collection",
       reach: "850K",
       engagement: "4.2%",
@@ -50,8 +52,12 @@ export default function AnalyticsPage() {
       cost: "$8,250",
       roi: "320%",
       status: "Active",
+      influencers: 12,
+      startDate: "May 15, 2025",
+      endDate: "Jul 15, 2025",
     },
     {
+      id: "2",
       name: "Tech Product Launch",
       reach: "620K",
       engagement: "6.1%",
@@ -59,8 +65,12 @@ export default function AnalyticsPage() {
       cost: "$12,500",
       roi: "280%",
       status: "Active",
+      influencers: 8,
+      startDate: "Jun 1, 2025",
+      endDate: "Aug 1, 2025",
     },
     {
+      id: "3",
       name: "Fitness Challenge",
       reach: "420K",
       engagement: "5.8%",
@@ -68,6 +78,35 @@ export default function AnalyticsPage() {
       cost: "$6,800",
       roi: "410%",
       status: "Completed",
+      influencers: 15,
+      startDate: "Apr 1, 2025",
+      endDate: "May 30, 2025",
+    },
+    {
+      id: "4",
+      name: "Beauty Brand Collaboration",
+      reach: "1.2M",
+      engagement: "3.9%",
+      impressions: "2.1M",
+      cost: "$15,200",
+      roi: "245%",
+      status: "Active",
+      influencers: 20,
+      startDate: "May 20, 2025",
+      endDate: "Jul 20, 2025",
+    },
+    {
+      id: "5",
+      name: "Holiday Collection",
+      reach: "680K",
+      engagement: "5.1%",
+      impressions: "1.5M",
+      cost: "$9,800",
+      roi: "365%",
+      status: "Completed",
+      influencers: 10,
+      startDate: "Nov 1, 2024",
+      endDate: "Dec 31, 2024",
     },
   ]
 
@@ -213,42 +252,78 @@ export default function AnalyticsPage() {
                 <CardDescription>Compare performance across all your campaigns</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {campaignPerformance.map((campaign, index) => (
-                    <div key={index} className="p-4 border rounded-lg">
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <h3 className="font-semibold text-gray-900">{campaign.name}</h3>
-                          <Badge variant={campaign.status === "Active" ? "default" : "secondary"}>
-                            {campaign.status}
-                          </Badge>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm text-gray-600">ROI</p>
-                          <p className="text-lg font-bold text-green-600">{campaign.roi}</p>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div className="text-center p-3 bg-gray-50 rounded-lg">
-                          <p className="text-sm text-gray-600">Reach</p>
-                          <p className="text-lg font-semibold">{campaign.reach}</p>
-                        </div>
-                        <div className="text-center p-3 bg-gray-50 rounded-lg">
-                          <p className="text-sm text-gray-600">Engagement</p>
-                          <p className="text-lg font-semibold">{campaign.engagement}</p>
-                        </div>
-                        <div className="text-center p-3 bg-gray-50 rounded-lg">
-                          <p className="text-sm text-gray-600">Impressions</p>
-                          <p className="text-lg font-semibold">{campaign.impressions}</p>
-                        </div>
-                        <div className="text-center p-3 bg-gray-50 rounded-lg">
-                          <p className="text-sm text-gray-600">Cost</p>
-                          <p className="text-lg font-semibold">{campaign.cost}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                <div className="rounded-lg border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-gray-50">
+                        <TableHead className="font-semibold">Campaign</TableHead>
+                        <TableHead className="font-semibold">Status</TableHead>
+                        <TableHead className="font-semibold">Reach</TableHead>
+                        <TableHead className="font-semibold">Engagement</TableHead>
+                        <TableHead className="font-semibold">Impressions</TableHead>
+                        <TableHead className="font-semibold">Cost</TableHead>
+                        <TableHead className="font-semibold">ROI</TableHead>
+                        <TableHead className="font-semibold">Influencers</TableHead>
+                        <TableHead className="font-semibold">Duration</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {campaignPerformance.map((campaign) => (
+                        <TableRow key={campaign.id} className="hover:bg-gray-50">
+                          <TableCell>
+                            <div>
+                              <p className="font-medium text-gray-900">{campaign.name}</p>
+                              <p className="text-sm text-gray-500">ID: {campaign.id}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={campaign.status === "Active" ? "default" : "secondary"}
+                              className={
+                                campaign.status === "Active"
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-gray-100 text-gray-700"
+                              }
+                            >
+                              {campaign.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="font-medium">{campaign.reach}</div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <div className="font-medium">{campaign.engagement}</div>
+                              <div className="w-16 bg-gray-200 rounded-full h-2">
+                                <div
+                                  className="bg-blue-600 h-2 rounded-full"
+                                  style={{ width: `${Number.parseFloat(campaign.engagement)}0%` }}
+                                ></div>
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="font-medium">{campaign.impressions}</div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="font-medium">{campaign.cost}</div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="font-bold text-green-600">{campaign.roi}</div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="font-medium">{campaign.influencers}</div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="text-sm">
+                              <div>{campaign.startDate}</div>
+                              <div className="text-gray-500">to {campaign.endDate}</div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </div>
               </CardContent>
             </Card>

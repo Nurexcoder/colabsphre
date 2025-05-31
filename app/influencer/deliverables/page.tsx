@@ -37,6 +37,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 export default function DeliverablesPage() {
   const [selectedCampaign, setSelectedCampaign] = useState("")
+  const [selectedDeliverable, setSelectedDeliverable] = useState("")
   const [uploadFile, setUploadFile] = useState<File | null>(null)
   const [description, setDescription] = useState("")
   const [deliverableType, setDeliverableType] = useState("")
@@ -46,6 +47,22 @@ export default function DeliverablesPage() {
     { id: "2", name: "Tech Product Launch" },
     { id: "3", name: "Fitness Challenge" },
   ]
+
+  const deliverableOptions = {
+    "1": [
+      { id: "d1", name: "Instagram Post #1" },
+      { id: "d2", name: "Instagram Stories" },
+      { id: "d3", name: "Instagram Reel" },
+    ],
+    "2": [
+      { id: "d4", name: "YouTube Review" },
+      { id: "d5", name: "Instagram Post" },
+    ],
+    "3": [
+      { id: "d6", name: "Workout Routine Post" },
+      { id: "d7", name: "Progress Update" },
+    ],
+  }
 
   const deliverables = [
     {
@@ -156,11 +173,11 @@ export default function DeliverablesPage() {
   }
 
   const handleSubmitDeliverable = () => {
-    if (uploadFile && description && deliverableType && selectedCampaign) {
+    if (uploadFile && description && (deliverableType || selectedDeliverable) && selectedCampaign) {
       console.log("Submitting deliverable:", {
         file: uploadFile.name,
         description,
-        type: deliverableType,
+        type: deliverableType || selectedDeliverable,
         campaign: selectedCampaign,
       })
       // Reset form
@@ -168,7 +185,13 @@ export default function DeliverablesPage() {
       setDescription("")
       setDeliverableType("")
       setSelectedCampaign("")
+      setSelectedDeliverable("")
     }
+  }
+
+  const handleCampaignChange = (value: string) => {
+    setSelectedCampaign(value)
+    setSelectedDeliverable("")
   }
 
   return (
@@ -196,7 +219,7 @@ export default function DeliverablesPage() {
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
                   <Label>Campaign</Label>
-                  <Select value={selectedCampaign} onValueChange={setSelectedCampaign}>
+                  <Select value={selectedCampaign} onValueChange={handleCampaignChange}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select campaign" />
                     </SelectTrigger>
@@ -209,6 +232,24 @@ export default function DeliverablesPage() {
                     </SelectContent>
                   </Select>
                 </div>
+
+                {selectedCampaign && (
+                  <div className="space-y-2">
+                    <Label>Deliverable</Label>
+                    <Select value={selectedDeliverable} onValueChange={setSelectedDeliverable}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select deliverable" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {deliverableOptions[selectedCampaign as keyof typeof deliverableOptions]?.map((deliverable) => (
+                          <SelectItem key={deliverable.id} value={deliverable.id}>
+                            {deliverable.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
 
                 <div className="space-y-2">
                   <Label>Content Type</Label>
@@ -261,7 +302,9 @@ export default function DeliverablesPage() {
                 <Button variant="outline">Save as Draft</Button>
                 <Button
                   onClick={handleSubmitDeliverable}
-                  disabled={!uploadFile || !description || !deliverableType || !selectedCampaign}
+                  disabled={
+                    !uploadFile || !description || (!deliverableType && !selectedDeliverable) || !selectedCampaign
+                  }
                 >
                   Submit Content
                 </Button>
