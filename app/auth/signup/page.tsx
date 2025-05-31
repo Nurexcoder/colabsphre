@@ -1,25 +1,26 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Badge } from "@/components/ui/badge"
-import { Zap, Building2, Users, ArrowLeft } from "lucide-react"
-import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { Zap, Building2, Users, ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { CollabSphereLogo } from "@/components/CollabSphereLogo";
 
 export default function SignupPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const defaultRole = searchParams.get("role") || "brand"
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const defaultRole = searchParams.get("role") || "brand";
 
-  const [activeTab, setActiveTab] = useState(defaultRole)
+  const [activeTab, setActiveTab] = useState(defaultRole);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -32,52 +33,68 @@ export default function SignupPage() {
     youtubeHandle: "",
     followers: "",
     agreeToTerms: false,
-  })
+  });
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // Handle signup logic here
     if (activeTab === "brand") {
-      router.push("/brand/dashboard")
+      router.push("/brand/dashboard");
     } else {
-      router.push("/influencer/dashboard")
+      router.push("/influencer/dashboard");
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4">
+          <Link
+            href="/"
+            className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4"
+          >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to home
           </Link>
 
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-              <Zap className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-gray-900">InfluencerFlow</span>
+            <CollabSphereLogo size={32} />
+            <span className="text-xl font-bold text-gray-900">
+              CollabSphere
+            </span>
           </div>
-
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
-          <p className="text-gray-600">Join the future of influencer marketing</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Create Account
+          </h1>
+          <p className="text-gray-600">
+            Join the future of influencer marketing
+          </p>
         </div>
 
         <Card className="shadow-xl border-0 w-full">
           <CardHeader className="pb-4">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full"
+            >
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="brand" className="flex items-center space-x-2">
+                <TabsTrigger
+                  value="brand"
+                  className="flex items-center space-x-2"
+                >
                   <Building2 className="w-4 h-4" />
                   <span>Brand</span>
                 </TabsTrigger>
-                <TabsTrigger value="influencer" className="flex items-center space-x-2">
+                <TabsTrigger
+                  value="influencer"
+                  className="flex items-center space-x-2"
+                >
                   <Users className="w-4 h-4" />
                   <span>Influencer</span>
                 </TabsTrigger>
@@ -96,7 +113,9 @@ export default function SignupPage() {
                       type="text"
                       placeholder="John Doe"
                       value={formData.name}
-                      onChange={(e) => handleInputChange("name", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("name", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -108,7 +127,9 @@ export default function SignupPage() {
                       type="email"
                       placeholder="john@company.com"
                       value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("email", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -120,7 +141,9 @@ export default function SignupPage() {
                       type="text"
                       placeholder="Your Company"
                       value={formData.company}
-                      onChange={(e) => handleInputChange("company", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("company", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -132,7 +155,9 @@ export default function SignupPage() {
                       type="url"
                       placeholder="https://yourcompany.com"
                       value={formData.website}
-                      onChange={(e) => handleInputChange("website", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("website", e.target.value)
+                      }
                     />
                   </div>
 
@@ -143,7 +168,9 @@ export default function SignupPage() {
                       type="password"
                       placeholder="••••••••"
                       value={formData.password}
-                      onChange={(e) => handleInputChange("password", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("password", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -155,7 +182,9 @@ export default function SignupPage() {
                       type="password"
                       placeholder="••••••••"
                       value={formData.confirmPassword}
-                      onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("confirmPassword", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -169,7 +198,9 @@ export default function SignupPage() {
                       type="text"
                       placeholder="Jane Smith"
                       value={formData.name}
-                      onChange={(e) => handleInputChange("name", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("name", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -181,7 +212,9 @@ export default function SignupPage() {
                       type="email"
                       placeholder="jane@example.com"
                       value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("email", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -194,7 +227,9 @@ export default function SignupPage() {
                         type="text"
                         placeholder="@username"
                         value={formData.instagramHandle}
-                        onChange={(e) => handleInputChange("instagramHandle", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("instagramHandle", e.target.value)
+                        }
                       />
                     </div>
                     <div className="space-y-2">
@@ -204,19 +239,25 @@ export default function SignupPage() {
                         type="text"
                         placeholder="@username"
                         value={formData.tiktokHandle}
-                        onChange={(e) => handleInputChange("tiktokHandle", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("tiktokHandle", e.target.value)
+                        }
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="followers">Total Followers (Approximate)</Label>
+                    <Label htmlFor="followers">
+                      Total Followers (Approximate)
+                    </Label>
                     <Input
                       id="followers"
                       type="text"
                       placeholder="e.g., 50K, 1M"
                       value={formData.followers}
-                      onChange={(e) => handleInputChange("followers", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("followers", e.target.value)
+                      }
                     />
                   </div>
 
@@ -227,7 +268,9 @@ export default function SignupPage() {
                       type="password"
                       placeholder="••••••••"
                       value={formData.password}
-                      onChange={(e) => handleInputChange("password", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("password", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -239,7 +282,9 @@ export default function SignupPage() {
                       type="password"
                       placeholder="••••••••"
                       value={formData.confirmPassword}
-                      onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("confirmPassword", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -250,7 +295,9 @@ export default function SignupPage() {
                 <Checkbox
                   id="terms"
                   checked={formData.agreeToTerms}
-                  onCheckedChange={(checked) => handleInputChange("agreeToTerms", checked as boolean)}
+                  onCheckedChange={(checked) =>
+                    handleInputChange("agreeToTerms", checked as boolean)
+                  }
                 />
                 <Label htmlFor="terms" className="text-sm text-gray-600">
                   I agree to the{" "}
@@ -258,20 +305,31 @@ export default function SignupPage() {
                     Terms & Conditions
                   </Link>{" "}
                   and{" "}
-                  <Link href="/privacy" className="text-blue-600 hover:underline">
+                  <Link
+                    href="/privacy"
+                    className="text-blue-600 hover:underline"
+                  >
                     Privacy Policy
                   </Link>
                 </Label>
               </div>
 
-              <Button type="submit" className="w-full" size="lg" disabled={!formData.agreeToTerms}>
+              <Button
+                type="submit"
+                className="w-full"
+                size="lg"
+                disabled={!formData.agreeToTerms}
+              >
                 Create Account
               </Button>
 
               <div className="text-center">
                 <p className="text-sm text-gray-600">
                   Already have an account?{" "}
-                  <Link href="/auth/login" className="text-blue-600 hover:underline">
+                  <Link
+                    href="/auth/login"
+                    className="text-blue-600 hover:underline"
+                  >
                     Sign in
                   </Link>
                 </p>
@@ -289,12 +347,15 @@ export default function SignupPage() {
             <Badge variant="secondary" className="bg-blue-100 text-blue-700">
               ✓ AI-powered matching
             </Badge>
-            <Badge variant="secondary" className="bg-purple-100 text-purple-700">
+            <Badge
+              variant="secondary"
+              className="bg-purple-100 text-purple-700"
+            >
               ✓ Automated workflows
             </Badge>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

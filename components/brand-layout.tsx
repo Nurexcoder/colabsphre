@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import {
   LayoutDashboard,
   Megaphone,
@@ -23,9 +23,9 @@ import {
   Bot,
   FileText,
   Upload,
-} from "lucide-react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,7 +33,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
@@ -44,28 +44,29 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import { CollabSphereLogo } from "./CollabSphereLogo";
 
 interface BrandLayoutProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export function BrandLayout({ children }: BrandLayoutProps) {
-  const pathname = usePathname()
-  const [isMobile, setIsMobile] = useState(false)
+  const pathname = usePathname();
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 1024)
-    }
+      setIsMobile(window.innerWidth < 1024);
+    };
 
-    checkIsMobile()
-    window.addEventListener("resize", checkIsMobile)
+    checkIsMobile();
+    window.addEventListener("resize", checkIsMobile);
 
     return () => {
-      window.removeEventListener("resize", checkIsMobile)
-    }
-  }, [])
+      window.removeEventListener("resize", checkIsMobile);
+    };
+  }, []);
 
   const navigation = [
     { name: "Dashboard", href: "/brand/dashboard", icon: LayoutDashboard },
@@ -77,25 +78,25 @@ export function BrandLayout({ children }: BrandLayoutProps) {
     { name: "AI Assistant", href: "/brand/ai-assistant", icon: Bot },
     { name: "Analytics", href: "/brand/analytics", icon: BarChart3 },
     { name: "Settings", href: "/brand/settings", icon: Settings },
-  ]
+  ];
 
   return (
     <SidebarProvider defaultOpen={!isMobile}>
       <div className="flex min-h-screen bg-gray-50 w-full">
         <Sidebar className="border-r">
           <SidebarHeader className="border-b">
-            <div className="flex items-center space-x-2 px-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Zap className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-gray-900">InfluencerFlow</span>
+            <div className="flex items-center space-x-2 mb-8">
+              <CollabSphereLogo size={28} />
+              <span className="text-lg font-bold text-gray-900">
+                CollabSphere
+              </span>
             </div>
           </SidebarHeader>
 
           <SidebarContent>
             <SidebarMenu>
               {navigation.map((item) => {
-                const isActive = pathname === item.href
+                const isActive = pathname === item.href;
                 return (
                   <SidebarMenuItem key={item.name}>
                     <SidebarMenuButton asChild isActive={isActive}>
@@ -105,7 +106,7 @@ export function BrandLayout({ children }: BrandLayoutProps) {
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                )
+                );
               })}
             </SidebarMenu>
           </SidebarContent>
@@ -122,8 +123,12 @@ export function BrandLayout({ children }: BrandLayoutProps) {
                         className="w-8 h-8 rounded-full"
                       />
                       <div className="flex-1 min-w-0 text-left">
-                        <p className="text-sm font-medium text-gray-900 truncate">John Doe</p>
-                        <p className="text-xs text-gray-500 truncate">Brand Manager</p>
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          John Doe
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">
+                          Brand Manager
+                        </p>
                       </div>
                       <ChevronDown className="w-4 h-4 text-gray-500" />
                     </div>
@@ -167,8 +172,10 @@ export function BrandLayout({ children }: BrandLayoutProps) {
                   <span>Brand</span>
                   <span>/</span>
                   <span className="text-gray-900">
-                    {pathname.split("/").pop()?.charAt(0).toUpperCase() + pathname.split("/").pop()?.slice(1) ||
-                      "Dashboard"}
+                    {(() => {
+                      const lastSegment = pathname.split("/").pop() || "dashboard";
+                      return lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1);
+                    })()}
                   </span>
                 </nav>
               </div>
@@ -177,7 +184,11 @@ export function BrandLayout({ children }: BrandLayoutProps) {
                 <div className="hidden md:block">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <Input type="search" placeholder="Search campaigns, influencers..." className="pl-10 w-64" />
+                    <Input
+                      type="search"
+                      placeholder="Search campaigns, influencers..."
+                      className="pl-10 w-64"
+                    />
                   </div>
                 </div>
 
@@ -225,9 +236,11 @@ export function BrandLayout({ children }: BrandLayoutProps) {
           </header>
 
           {/* Page content */}
-          <main className="flex-1 p-4 sm:p-6 overflow-auto max-w-full">{children}</main>
+          <main className="flex-1 p-4 sm:p-6 overflow-auto max-w-full">
+            {children}
+          </main>
         </div>
       </div>
     </SidebarProvider>
-  )
+  );
 }
