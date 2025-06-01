@@ -14,7 +14,7 @@ axiosInstance.interceptors.request.use(
     // Check if the access token exists in cookies and add it to request headers
     const token = Cookie.get("access_token");
     if (token) {
-      config.headers.Authorization = `${token}`;
+      config.headers.Authorization = `${token}`; // <-- Bearer prefix
     }
     return config;
   },

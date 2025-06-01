@@ -33,7 +33,20 @@ import { CollabSphereLogo } from "@/components/CollabSphereLogo";
 
 // SECTION: Floating Particles Background
 const FloatingParticles = () => {
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+  }, []);
+
   const particles = Array.from({ length: 50 }, (_, i) => i);
+
+  if (dimensions.width === 0 || dimensions.height === 0) return null;
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -42,12 +55,12 @@ const FloatingParticles = () => {
           key={particle}
           className="absolute w-2 h-2 bg-blue-400 rounded-full opacity-20"
           initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: Math.random() * dimensions.width,
+            y: Math.random() * dimensions.height,
           }}
           animate={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: Math.random() * dimensions.width,
+            y: Math.random() * dimensions.height,
           }}
           transition={{
             duration: Math.random() * 20 + 10,

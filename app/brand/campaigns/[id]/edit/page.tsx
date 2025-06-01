@@ -1,52 +1,114 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Save, X, Instagram, Youtube, Twitter } from "lucide-react"
-import Link from "next/link"
-import { BrandLayout } from "@/components/brand-layout"
-import { useParams, useRouter } from "next/navigation"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import {
+  ArrowLeft,
+  Save,
+  X,
+  Instagram,
+  Youtube,
+  Twitter,
+  Loader2,
+} from "lucide-react";
+import Link from "next/link";
+import { BrandLayout } from "@/components/brand-layout";
+import { useParams, useRouter } from "next/navigation";
+import axiosInstance from "@/lib/api";
 
 export default function EditCampaignPage() {
-  const params = useParams()
-  const router = useRouter()
-  const campaignId = params.id as string
+  const params = useParams();
+  const router = useRouter();
+  const campaignId = params.id as string;
 
-  // In a real app, you would fetch the campaign data based on the ID
-  const [formData, setFormData] = useState({
-    name: "Summer Fashion Collection",
-    description:
-      "Promote our new summer fashion collection across Instagram and TikTok. Focus on beachwear, casual summer outfits, and accessories.",
-    platforms: ["instagram", "tiktok"],
-    campaignType: "Product Launch",
+  const [formData, setFormData] = useState<{
+    name: string;
+    description: string;
+    platforms: string[];
+    campaignType: string;
+    ageRange: [number, number];
+    gender: string;
+    location: string;
+    interests: string[];
+    followerRange: [number, number];
+    engagementRate: number;
+    contentTypes: string[];
+    brandGuidelines: string;
+    hashtags: string[];
+    totalBudget: string;
+    budgetPerInfluencer: [number, number];
+    startDate: string;
+    endDate: string;
+    deliverableDeadline: string;
+  }>({
+    name: "",
+    description: "",
+    platforms: [],
+    campaignType: "",
     ageRange: [18, 35],
-    gender: "Female",
-    location: "United States",
-    interests: ["Fashion", "Lifestyle"],
+    gender: "Any",
+    location: "",
+    interests: [],
     followerRange: [10000, 500000],
     engagementRate: 4,
-    contentTypes: ["Instagram Posts", "Instagram Stories", "Instagram Reels"],
-    brandGuidelines:
-      "Focus on summer vibes, bright colors, and casual styling. Use natural lighting and authentic poses.",
-    hashtags: ["#SummerFashion", "#BeachVibes", "#CasualStyle"],
-    totalBudget: "15000",
+    contentTypes: [],
+    brandGuidelines: "",
+    hashtags: [],
+    totalBudget: "",
     budgetPerInfluencer: [500, 2000],
-    startDate: "2025-05-15",
-    endDate: "2025-07-15",
-    deliverableDeadline: "2025-07-10",
-  })
+    startDate: "",
+    endDate: "",
+    deliverableDeadline: "",
+  });
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCampaign = async () => {
+      setLoading(true);
+      try {
+        const res = await axiosInstance.get(`/api/campaign`, {
+          params: { campaign_id: campaignId },
+        });
+        const data = res.data.data?.campaign || res.data.data;
+        setFormData({
+          name: data.name || "",
+          description: data.description || "",
+          platforms: data.platforms || [],
+          campaignType: data.campaignType || "",
+          ageRange: data.ageRange || [18, 35],
+          gender: data.gender || "Any",
+          location: data.location || "",
+          interests: data.interests || [],
+          followerRange: data.followerRange || [10000, 500000],
+          engagementRate: data.engagementRate || 4,
+          contentTypes: data.contentTypes || [],
+          brandGuidelines: data.brandGuidelines || "",
+          hashtags: data.hashtags || [],
+          totalBudget: data.totalBudget || "",
+          budgetPerInfluencer: data.budgetPerInfluencer || [500, 2000],
+          startDate: data.startDate || "",
+          endDate: data.endDate || "",
+          deliverableDeadline: data.deliverableDeadline || "",
+        });
+      } catch (error) {
+        // Optionally handle error
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (campaignId) fetchCampaign();
+  }, [campaignId]);
 
   const platforms = [
     { id: "instagram", name: "Instagram", icon: Instagram },
     { id: "youtube", name: "YouTube", icon: Youtube },
-    { id: "tiktok", name: "TikTok", icon: Twitter },
-    { id: "twitter", name: "Twitter", icon: Twitter },
-  ]
+  ];
 
   const campaignTypes = [
     "Product Launch",
@@ -55,18 +117,15 @@ export default function EditCampaignPage() {
     "Seasonal Campaign",
     "User Generated Content",
     "Reviews & Testimonials",
-  ]
+  ];
 
   const contentTypes = [
     "Instagram Posts",
     "Instagram Stories",
     "Instagram Reels",
     "YouTube Videos",
-    "TikTok Videos",
-    "Blog Posts",
-    "Unboxing Videos",
-    "Tutorials",
-  ]
+    "YouTube Shorts",
+  ];
 
   const interestOptions = [
     "Fashion",
@@ -81,19 +140,34 @@ export default function EditCampaignPage() {
     "Business",
     "Art",
     "Music",
-  ]
+  ];
 
   const updateFormData = (field: string, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const toggleArrayItem = (array: string[], item: string) => {
-    return array.includes(item) ? array.filter((i) => i !== item) : [...array, item]
-  }
+    return array.includes(item)
+      ? array.filter((i) => i !== item)
+      : [...array, item];
+  };
 
   const handleSave = () => {
     // Handle campaign update
-    router.push(`/brand/campaigns/${campaignId}`)
+    router.push(`/brand/campaigns/${campaignId}`);
+  };
+
+  if (loading) {
+    return (
+      <BrandLayout>
+        <div className="flex justify-center items-center h-96">
+          <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+          <span className="ml-3 text-gray-500 text-lg">
+            Loading campaign...
+          </span>
+        </div>
+      </BrandLayout>
+    );
   }
 
   return (
@@ -109,7 +183,9 @@ export default function EditCampaignPage() {
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Edit Campaign</h1>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Edit Campaign
+              </h1>
               <p className="text-gray-600">Update your campaign details</p>
             </div>
           </div>
@@ -133,7 +209,11 @@ export default function EditCampaignPage() {
           <CardContent className="space-y-4">
             <div>
               <Label htmlFor="name">Campaign Name</Label>
-              <Input id="name" value={formData.name} onChange={(e) => updateFormData("name", e.target.value)} />
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => updateFormData("name", e.target.value)}
+              />
             </div>
 
             <div>
@@ -157,7 +237,12 @@ export default function EditCampaignPage() {
                         ? "border-blue-500 bg-blue-50"
                         : "border-gray-200 hover:border-gray-300"
                     }`}
-                    onClick={() => updateFormData("platforms", toggleArrayItem(formData.platforms, platform.id))}
+                    onClick={() =>
+                      updateFormData(
+                        "platforms",
+                        toggleArrayItem(formData.platforms, platform.id)
+                      )
+                    }
                   >
                     <platform.icon className="w-6 h-6 mb-2" />
                     <p className="text-sm font-medium">{platform.name}</p>
@@ -203,7 +288,12 @@ export default function EditCampaignPage() {
                   min="13"
                   max="65"
                   value={formData.ageRange[0]}
-                  onChange={(e) => updateFormData("ageRange", [Number.parseInt(e.target.value), formData.ageRange[1]])}
+                  onChange={(e) =>
+                    updateFormData("ageRange", [
+                      Number.parseInt(e.target.value),
+                      formData.ageRange[1],
+                    ])
+                  }
                   className="w-full"
                 />
               </div>
@@ -243,9 +333,18 @@ export default function EditCampaignPage() {
                 {interestOptions.map((interest) => (
                   <Badge
                     key={interest}
-                    variant={formData.interests.includes(interest) ? "default" : "outline"}
+                    variant={
+                      formData.interests.includes(interest)
+                        ? "default"
+                        : "outline"
+                    }
                     className="cursor-pointer justify-center py-2"
-                    onClick={() => updateFormData("interests", toggleArrayItem(formData.interests, interest))}
+                    onClick={() =>
+                      updateFormData(
+                        "interests",
+                        toggleArrayItem(formData.interests, interest)
+                      )
+                    }
                   >
                     {interest}
                   </Badge>
@@ -255,7 +354,8 @@ export default function EditCampaignPage() {
 
             <div>
               <Label>
-                Follower Count Range: {formData.followerRange[0].toLocaleString()} -{" "}
+                Follower Count Range:{" "}
+                {formData.followerRange[0].toLocaleString()} -{" "}
                 {formData.followerRange[1].toLocaleString()}
               </Label>
               <div className="mt-2">
@@ -266,7 +366,10 @@ export default function EditCampaignPage() {
                   step="1000"
                   value={formData.followerRange[0]}
                   onChange={(e) =>
-                    updateFormData("followerRange", [Number.parseInt(e.target.value), formData.followerRange[1]])
+                    updateFormData("followerRange", [
+                      Number.parseInt(e.target.value),
+                      formData.followerRange[1],
+                    ])
                   }
                   className="w-full"
                 />
@@ -282,7 +385,12 @@ export default function EditCampaignPage() {
                   max="20"
                   step="0.5"
                   value={formData.engagementRate}
-                  onChange={(e) => updateFormData("engagementRate", Number.parseFloat(e.target.value))}
+                  onChange={(e) =>
+                    updateFormData(
+                      "engagementRate",
+                      Number.parseFloat(e.target.value)
+                    )
+                  }
                   className="w-full"
                 />
               </div>
@@ -307,7 +415,12 @@ export default function EditCampaignPage() {
                         ? "border-blue-500 bg-blue-50 text-blue-700"
                         : "border-gray-200 hover:border-gray-300"
                     }`}
-                    onClick={() => updateFormData("contentTypes", toggleArrayItem(formData.contentTypes, type))}
+                    onClick={() =>
+                      updateFormData(
+                        "contentTypes",
+                        toggleArrayItem(formData.contentTypes, type)
+                      )
+                    }
                   >
                     <p className="text-sm font-medium">{type}</p>
                   </div>
@@ -321,7 +434,9 @@ export default function EditCampaignPage() {
                 id="brandGuidelines"
                 rows={4}
                 value={formData.brandGuidelines}
-                onChange={(e) => updateFormData("brandGuidelines", e.target.value)}
+                onChange={(e) =>
+                  updateFormData("brandGuidelines", e.target.value)
+                }
               />
             </div>
 
@@ -329,14 +444,18 @@ export default function EditCampaignPage() {
               <Label>Required Hashtags</Label>
               <div className="flex flex-wrap gap-2 mt-2">
                 {formData.hashtags.map((tag, index) => (
-                  <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                  <Badge
+                    key={index}
+                    variant="secondary"
+                    className="flex items-center gap-1"
+                  >
                     {tag}
                     <X
                       className="w-3 h-3 cursor-pointer"
                       onClick={() =>
                         updateFormData(
                           "hashtags",
-                          formData.hashtags.filter((_, i) => i !== index),
+                          formData.hashtags.filter((_, i) => i !== index)
                         )
                       }
                     />
@@ -348,10 +467,10 @@ export default function EditCampaignPage() {
                 className="mt-2"
                 onKeyPress={(e) => {
                   if (e.key === "Enter") {
-                    const value = (e.target as HTMLInputElement).value.trim()
+                    const value = (e.target as HTMLInputElement).value.trim();
                     if (value && !formData.hashtags.includes(value)) {
-                      updateFormData("hashtags", [...formData.hashtags, value])
-                      ;(e.target as HTMLInputElement).value = ""
+                      updateFormData("hashtags", [...formData.hashtags, value]);
+                      (e.target as HTMLInputElement).value = "";
                     }
                   }
                 }}
@@ -378,7 +497,8 @@ export default function EditCampaignPage() {
 
             <div>
               <Label>
-                Budget per Influencer: ${formData.budgetPerInfluencer[0]} - ${formData.budgetPerInfluencer[1]}
+                Budget per Influencer: ${formData.budgetPerInfluencer[0]} - $
+                {formData.budgetPerInfluencer[1]}
               </Label>
               <div className="mt-2 space-y-2">
                 <input
@@ -440,12 +560,14 @@ export default function EditCampaignPage() {
                 id="deliverableDeadline"
                 type="date"
                 value={formData.deliverableDeadline}
-                onChange={(e) => updateFormData("deliverableDeadline", e.target.value)}
+                onChange={(e) =>
+                  updateFormData("deliverableDeadline", e.target.value)
+                }
               />
             </div>
           </CardContent>
         </Card>
       </div>
     </BrandLayout>
-  )
+  );
 }

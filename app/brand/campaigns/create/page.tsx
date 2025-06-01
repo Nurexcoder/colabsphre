@@ -34,6 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import axiosInstance from "@/lib/api";
 
 export default function CreateCampaignPage() {
   const router = useRouter();
@@ -274,9 +275,11 @@ export default function CreateCampaignPage() {
     }
   };
 
-  const handleSave = () => {
-    // Handle campaign creation with AI setup
-    console.log("Creating campaign with AI:", {
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    const payload = {
       campaign: formData,
       ai: {
         enabled: aiEnabled,
@@ -286,8 +289,17 @@ export default function CreateCampaignPage() {
         aggressiveness: aiAggressiveness[0],
         specialization: aiSpecialization,
       },
-    });
-    router.push("/brand/campaigns");
+    };
+
+    try {
+      await axiosInstance.post("/api/campaign", payload);
+      router.push("/brand/campaigns");
+    } catch (error) {
+      console.error("Failed to create campaign:", error);
+      // Optionally show error to user
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const progress = (currentStep / totalSteps) * 100;
@@ -963,9 +975,16 @@ export default function CreateCampaignPage() {
                 <Button
                   onClick={handleSave}
                   className="flex items-center gap-2"
+                  disabled={isSaving}
                 >
-                  <Save className="w-4 h-4" />
-                  Create Campaign
+                  {isSaving ? (
+                    <>Creating...</>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4" />
+                      Create Campaign
+                    </>
+                  )}
                 </Button>
               )}
             </div>

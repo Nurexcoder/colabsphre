@@ -103,7 +103,8 @@ export function NegotiationChatbot({ isOpen, onClose, campaign }: NegotiationCha
         message: message.trim(),
         timestamp: "Just now",
         isAI: false,
-        aiType: null,
+        aiType: "",
+        type: "user",
       }
 
       setConversation((prev) => [...prev, newMessage])

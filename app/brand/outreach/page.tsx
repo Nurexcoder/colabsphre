@@ -246,7 +246,7 @@ Warm regards,
                         className="mt-2"
                       />
                       <p className="text-xs text-gray-500 mt-1">
-                        Use {{ name }}, {{ platform }}, {{ followers }} for personalization
+                        Use {'{{name}}'}, {'{{platform}}'}, {'{{followers}}'} for personalization
                       </p>
                     </div>
 
