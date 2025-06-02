@@ -38,6 +38,13 @@ import {
   MapPin,
   Mail,
   CheckCircle,
+  Phone,
+  ArrowUpRight,
+  Clock,
+  Paperclip,
+  AlertCircle,
+  Mic,
+  ArrowDownLeft,
 } from "lucide-react";
 import Link from "next/link";
 import { BrandLayout } from "@/components/brand-layout";
@@ -92,6 +99,9 @@ export default function CampaignDetailsPage() {
   const [influencers, setInfluencers] = useState<any[]>([]);
   const [deliverables, setDeliverables] = useState<any[]>([]);
   const [contracts, setContracts] = useState<any[]>([]);
+  const [selectedInfluencerComm, setSelectedInfluencerComm] = useState<
+    any | null
+  >(null);
 
   useEffect(() => {
     const fetchCampaign = async () => {
@@ -151,6 +161,32 @@ export default function CampaignDetailsPage() {
         payment: "$1,200",
         statusColor: "bg-green-100 text-green-700",
         aiNegotiation: "Completed - Saved $200",
+        communication: {
+          emails: [
+            {
+              id: "e1",
+              sender: "Brand",
+              subject: "Welcome to the campaign!",
+              preview: "Hi Sarah, we're excited to have you...",
+              timestamp: "2025-06-01 10:00",
+            },
+            {
+              id: "e2",
+              sender: "Sarah Johnson",
+              subject: "Re: Welcome",
+              preview: "Thank you! Looking forward to collaborating.",
+              timestamp: "2025-06-01 11:00",
+            },
+          ],
+          voiceChats: [
+            {
+              id: "v1",
+              summary:
+                "Discussed campaign goals, deliverable expectations, and timeline. Sarah asked about creative freedom and deadlines. Brand clarified requirements and confirmed flexibility.",
+              timestamp: "2025-06-02 14:30",
+            },
+          ],
+        },
       },
       // ...other influencers
     ]);
@@ -484,7 +520,8 @@ export default function CampaignDetailsPage() {
                 Campaign Overview
               </CardTitle>
               <CardDescription>
-                A professional summary of campaign details and performance metrics
+                A professional summary of campaign details and performance
+                metrics
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-8">
@@ -506,7 +543,8 @@ export default function CampaignDetailsPage() {
                     <span className="text-sm font-semibold">Age Range</span>
                   </div>
                   <p className="text-base font-bold">
-                    {campaign.campaign?.ageRange?.[0] || campaign.ageRange?.[0]} –{" "}
+                    {campaign.campaign?.ageRange?.[0] || campaign.ageRange?.[0]}{" "}
+                    –{" "}
                     {campaign.campaign?.ageRange?.[1] || campaign.ageRange?.[1]}
                   </p>
                 </div>
@@ -522,15 +560,19 @@ export default function CampaignDetailsPage() {
                 <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow-sm">
                   <div className="flex items-center gap-2 text-purple-600 mb-1">
                     <DollarSign className="w-4 h-4" />
-                    <span className="text-sm font-semibold">Budget/Influencer</span>
+                    <span className="text-sm font-semibold">
+                      Budget/Influencer
+                    </span>
                   </div>
                   <p className="text-base font-bold">
                     $
                     {(campaign.campaign?.budgetPerInfluencer?.[0] ||
-                      campaign.budgetPerInfluencer?.[0]) ?? "-"}
+                      campaign.budgetPerInfluencer?.[0]) ??
+                      "-"}
                     {" – $"}
                     {(campaign.campaign?.budgetPerInfluencer?.[1] ||
-                      campaign.budgetPerInfluencer?.[1]) ?? "-"}
+                      campaign.budgetPerInfluencer?.[1]) ??
+                      "-"}
                   </p>
                 </div>
               </div>
@@ -542,11 +584,16 @@ export default function CampaignDetailsPage() {
                     <div className="flex justify-between text-sm mb-1">
                       <span className="font-medium">Engagement Rate</span>
                       <span>
-                        {campaign.campaign?.engagementRate || campaign.engagementRate}%
+                        {campaign.campaign?.engagementRate ||
+                          campaign.engagementRate}
+                        %
                       </span>
                     </div>
                     <Progress
-                      value={campaign.campaign?.engagementRate || campaign.engagementRate}
+                      value={
+                        campaign.campaign?.engagementRate ||
+                        campaign.engagementRate
+                      }
                       className="h-2"
                     />
                   </div>
@@ -578,7 +625,8 @@ export default function CampaignDetailsPage() {
                     <div className="flex justify-between text-sm mb-1">
                       <span className="font-medium">Type</span>
                       <span>
-                        {campaign.campaign?.campaignType || campaign.campaignType}
+                        {campaign.campaign?.campaignType ||
+                          campaign.campaignType}
                       </span>
                     </div>
                   </div>
@@ -588,7 +636,9 @@ export default function CampaignDetailsPage() {
                     <div className="flex justify-between text-sm mb-1">
                       <span className="font-medium">Hashtags</span>
                       <span className="truncate max-w-[180px] text-right">
-                        {(campaign.campaign?.hashtags || campaign.hashtags)?.join(", ") || "-"}
+                        {(
+                          campaign.campaign?.hashtags || campaign.hashtags
+                        )?.join(", ") || "-"}
                       </span>
                     </div>
                   </div>
@@ -596,7 +646,9 @@ export default function CampaignDetailsPage() {
                     <div className="flex justify-between text-sm mb-1">
                       <span className="font-medium">Interests</span>
                       <span className="truncate max-w-[180px] text-right">
-                        {(campaign.campaign?.interests || campaign.interests)?.join(", ") || "-"}
+                        {(
+                          campaign.campaign?.interests || campaign.interests
+                        )?.join(", ") || "-"}
                       </span>
                     </div>
                   </div>
@@ -604,7 +656,9 @@ export default function CampaignDetailsPage() {
                     <div className="flex justify-between text-sm mb-1">
                       <span className="font-medium">Platforms</span>
                       <span className="truncate max-w-[180px] text-right">
-                        {(campaign.campaign?.platforms || campaign.platforms)?.join(", ") || "-"}
+                        {(
+                          campaign.campaign?.platforms || campaign.platforms
+                        )?.join(", ") || "-"}
                       </span>
                     </div>
                   </div>
@@ -612,7 +666,10 @@ export default function CampaignDetailsPage() {
                     <div className="flex justify-between text-sm mb-1">
                       <span className="font-medium">Content Types</span>
                       <span className="truncate max-w-[180px] text-right">
-                        {(campaign.campaign?.contentTypes || campaign.contentTypes)?.join(", ") || "-"}
+                        {(
+                          campaign.campaign?.contentTypes ||
+                          campaign.contentTypes
+                        )?.join(", ") || "-"}
                       </span>
                     </div>
                   </div>
@@ -622,21 +679,33 @@ export default function CampaignDetailsPage() {
               {/* Guidelines, deadline, description */}
               <div className="grid md:grid-cols-3 gap-6">
                 <div>
-                  <div className="text-xs text-gray-500 mb-1 font-semibold">Brand Guidelines</div>
+                  <div className="text-xs text-gray-500 mb-1 font-semibold">
+                    Brand Guidelines
+                  </div>
                   <div className="bg-gray-50 rounded-lg p-3 text-sm min-h-[48px]">
-                    {campaign.campaign?.brandGuidelines || campaign.brandGuidelines || "-"}
+                    {campaign.campaign?.brandGuidelines ||
+                      campaign.brandGuidelines ||
+                      "-"}
                   </div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-500 mb-1 font-semibold">Deliverable Deadline</div>
+                  <div className="text-xs text-gray-500 mb-1 font-semibold">
+                    Deliverable Deadline
+                  </div>
                   <div className="bg-gray-50 rounded-lg p-3 text-sm min-h-[48px]">
-                    {campaign.campaign?.deliverableDeadline || campaign.deliverableDeadline || "-"}
+                    {campaign.campaign?.deliverableDeadline ||
+                      campaign.deliverableDeadline ||
+                      "-"}
                   </div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-500 mb-1 font-semibold">Description</div>
+                  <div className="text-xs text-gray-500 mb-1 font-semibold">
+                    Description
+                  </div>
                   <div className="bg-gray-50 rounded-lg p-3 text-sm min-h-[48px]">
-                    {campaign.campaign?.description || campaign.description || "-"}
+                    {campaign.campaign?.description ||
+                      campaign.description ||
+                      "-"}
                   </div>
                 </div>
               </div>
@@ -797,14 +866,313 @@ export default function CampaignDetailsPage() {
                         </TableCell>
                         <TableCell>{influencer.payment}</TableCell>
                         <TableCell className="text-right">
-                          <Button variant="ghost" size="sm">
-                            View
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              setSelectedInfluencerComm(influencer)
+                            }
+                          >
+                            View Communication
                           </Button>
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
+                {/* Communication Modal */}
+                <Dialog
+                  open={!!selectedInfluencerComm}
+                  onOpenChange={() => setSelectedInfluencerComm(null)}
+                >
+                  <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
+                    <DialogHeader className="flex-shrink-0 pb-4 border-b border-gray-200">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-lg">
+                          {selectedInfluencerComm?.name?.charAt(0)}
+                        </div>
+                        <div>
+                          <DialogTitle className="text-xl font-bold text-gray-900">
+                            Communication with {selectedInfluencerComm?.name}
+                          </DialogTitle>
+                          <DialogDescription className="text-gray-600">
+                            Complete communication history including emails and
+                            voice calls
+                          </DialogDescription>
+                        </div>
+                      </div>
+                    </DialogHeader>
+
+                    <div className="flex-1 overflow-hidden">
+                      <Tabs
+                        defaultValue="emails"
+                        className="h-full flex flex-col"
+                      >
+                        <TabsList className="grid w-full grid-cols-2 mb-4">
+                          <TabsTrigger
+                            value="emails"
+                            className="flex items-center gap-2"
+                          >
+                            <Mail className="w-4 h-4" />
+                            Emails (
+                            {selectedInfluencerComm?.communication?.emails
+                              ?.length || 0}
+                            )
+                          </TabsTrigger>
+                          <TabsTrigger
+                            value="voice"
+                            className="flex items-center gap-2"
+                          >
+                            <Phone className="w-4 h-4" />
+                            Voice Calls (
+                            {selectedInfluencerComm?.communication?.voiceChats
+                              ?.length || 0}
+                            )
+                          </TabsTrigger>
+                        </TabsList>
+
+                        <TabsContent
+                          value="emails"
+                          className="flex-1 overflow-hidden"
+                        >
+                          <div className="h-full overflow-y-auto pr-2">
+                            {selectedInfluencerComm?.communication?.emails
+                              ?.length > 0 ? (
+                              <div className="space-y-4">
+                                {selectedInfluencerComm.communication.emails.map(
+                                  (email: any, index: number) => (
+                                    <div key={email.id} className="group">
+                                      <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all duration-200 hover:border-gray-300">
+                                        {/* Email Header */}
+                                        <div className="flex items-start justify-between mb-3">
+                                          <div className="flex items-center gap-3">
+                                            <div
+                                              className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
+                                                email.direction === "sent"
+                                                  ? "bg-blue-100 text-blue-700"
+                                                  : "bg-green-100 text-green-700"
+                                              }`}
+                                            >
+                                              {email.direction === "sent" ? (
+                                                <ArrowUpRight className="w-4 h-4" />
+                                              ) : (
+                                                <ArrowDownLeft className="w-4 h-4" />
+                                              )}
+                                            </div>
+                                            <div>
+                                              <div className="font-semibold text-gray-900 text-sm">
+                                                {email.subject}
+                                              </div>
+                                              <div className="text-xs text-gray-500 flex items-center gap-2">
+                                                <Clock className="w-3 h-3" />
+                                                {new Date(
+                                                  email.timestamp
+                                                ).toLocaleDateString()}{" "}
+                                                at{" "}
+                                                {new Date(
+                                                  email.timestamp
+                                                ).toLocaleTimeString()}
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div
+                                            className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                              email.status === "read"
+                                                ? "bg-green-50 text-green-700 border border-green-200"
+                                                : email.status === "sent"
+                                                ? "bg-blue-50 text-blue-700 border border-blue-200"
+                                                : "bg-gray-50 text-gray-700 border border-gray-200"
+                                            }`}
+                                          >
+                                            {email.status || "sent"}
+                                          </div>
+                                        </div>
+
+                                        {/* Email Preview */}
+                                        <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
+                                          <p className="text-sm text-gray-700 leading-relaxed">
+                                            {email.preview}
+                                          </p>
+                                        </div>
+
+                                        {/* Email Actions */}
+                                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+                                          <div className="flex items-center gap-4 text-xs text-gray-500">
+                                            {email.attachments && (
+                                              <div className="flex items-center gap-1">
+                                                <Paperclip className="w-3 h-3" />
+                                                {email.attachments}{" "}
+                                                attachment(s)
+                                              </div>
+                                            )}
+                                            {email.priority && (
+                                              <div
+                                                className={`flex items-center gap-1 ${
+                                                  email.priority === "high"
+                                                    ? "text-red-600"
+                                                    : "text-yellow-600"
+                                                }`}
+                                              >
+                                                <AlertCircle className="w-3 h-3" />
+                                                {email.priority} priority
+                                              </div>
+                                            )}
+                                          </div>
+                                          <button className="text-xs text-blue-600 hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                                            View Full Email
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                            ) : (
+                              <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+                                <Mail className="w-12 h-12 mb-3 text-gray-300" />
+                                <p className="text-sm">
+                                  No email communications yet
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </TabsContent>
+
+                        <TabsContent
+                          value="voice"
+                          className="flex-1 overflow-hidden"
+                        >
+                          <div className="h-full overflow-y-auto pr-2">
+                            {selectedInfluencerComm?.communication?.voiceChats
+                              ?.length > 0 ? (
+                              <div className="space-y-4">
+                                {selectedInfluencerComm.communication.voiceChats.map(
+                                  (vc: any, index: number) => (
+                                    <div key={vc.id} className="group">
+                                      <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all duration-200 hover:border-gray-300">
+                                        {/* Call Header */}
+                                        <div className="flex items-start justify-between mb-3">
+                                          <div className="flex items-center gap-3">
+                                            <div
+                                              className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                                                vc.type === "outgoing"
+                                                  ? "bg-blue-100 text-blue-700"
+                                                  : "bg-green-100 text-green-700"
+                                              }`}
+                                            >
+                                              <Phone className="w-4 h-4" />
+                                            </div>
+                                            <div>
+                                              <div className="font-semibold text-gray-900 text-sm flex items-center gap-2">
+                                                {vc.type === "outgoing"
+                                                  ? "Outgoing Call"
+                                                  : "Incoming Call"}
+                                                <span className="text-xs text-gray-500">
+                                                  (
+                                                  {vc.duration ||
+                                                    "Unknown duration"}
+                                                  )
+                                                </span>
+                                              </div>
+                                              <div className="text-xs text-gray-500 flex items-center gap-2">
+                                                <Clock className="w-3 h-3" />
+                                                {new Date(
+                                                  vc.timestamp
+                                                ).toLocaleDateString()}{" "}
+                                                at{" "}
+                                                {new Date(
+                                                  vc.timestamp
+                                                ).toLocaleTimeString()}
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div
+                                            className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                              vc.outcome === "successful"
+                                                ? "bg-green-50 text-green-700 border border-green-200"
+                                                : vc.outcome === "missed"
+                                                ? "bg-red-50 text-red-700 border border-red-200"
+                                                : "bg-yellow-50 text-yellow-700 border border-yellow-200"
+                                            }`}
+                                          >
+                                            {vc.outcome || "completed"}
+                                          </div>
+                                        </div>
+
+                                        {/* Call Summary */}
+                                        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-100">
+                                          <div className="flex items-center gap-2 mb-2">
+                                            <FileText className="w-4 h-4 text-purple-600" />
+                                            <span className="text-sm font-medium text-purple-800">
+                                              Call Summary
+                                            </span>
+                                          </div>
+                                          <p className="text-sm text-gray-700 leading-relaxed">
+                                            {vc.summary}
+                                          </p>
+                                        </div>
+
+                                        {/* Call Details */}
+                                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+                                          <div className="flex items-center gap-4 text-xs text-gray-500">
+                                            {vc.recordingAvailable && (
+                                              <div className="flex items-center gap-1 text-green-600">
+                                                <Mic className="w-3 h-3" />
+                                                Recording available
+                                              </div>
+                                            )}
+                                            {vc.followUpRequired && (
+                                              <div className="flex items-center gap-1 text-orange-600">
+                                                <Calendar className="w-3 h-3" />
+                                                Follow-up required
+                                              </div>
+                                            )}
+                                          </div>
+                                          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            {vc.recordingAvailable && (
+                                              <button className="text-xs text-green-600 hover:text-green-800 font-medium">
+                                                Play Recording
+                                              </button>
+                                            )}
+                                            <button className="text-xs text-blue-600 hover:text-blue-800 font-medium">
+                                              View Details
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                            ) : (
+                              <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+                                <Phone className="w-12 h-12 mb-3 text-gray-300" />
+                                <p className="text-sm">
+                                  No voice communications yet
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </TabsContent>
+                      </Tabs>
+                    </div>
+
+                    {/* Footer Actions */}
+                    <div className="flex-shrink-0 flex items-center justify-between pt-4 border-t border-gray-200">
+                      <div className="text-xs text-gray-500">
+                        Last updated: {new Date().toLocaleDateString()}
+                      </div>
+                      <div className="flex gap-2">
+                        <button className="px-3 py-1.5 text-sm bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors font-medium">
+                          Send Email
+                        </button>
+                        <button className="px-3 py-1.5 text-sm bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors font-medium">
+                          Schedule Call
+                        </button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </CardContent>
             </Card>
           </TabsContent>
